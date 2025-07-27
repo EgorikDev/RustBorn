@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survival World - Мобильный аналог Rust</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #0d0d0d;
+            color: #e0e0e0;
+        }
+        
+        header {
+            background-color: #0a0a0a;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #8B0000;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            color: #8B0000;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            color: #aaa;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #1a1a1a;
+            padding: 15px;
+        }
+        
+        nav a {
+            color: #8B0000;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: #ff0000;
+        }
+        
+        .hero {
+            height: 60vh;
+            background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://via.placeholder.com/1920x1080/222/8B0000?text=Survival+World');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #8B0000;
+            text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 800px;
+        }
+        
+        .download-btn {
+            background-color: #8B0000;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+        }
+        
+        .download-btn:hover {
+            background-color: #ff0000;
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+        }
+        
+        /* Стили для модального окна CAPTCHA */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+        }
+        
+        .modal-content {
+            background-color: #1a1a1a;
+            margin: 15% auto;
+            padding: 30px;
+            border: 2px solid #8B0000;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .close {
+            color: #8B0000;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: 15px;
+            top: 5px;
+        }
+        
+        .close:hover {
+            color: #ff0000;
+        }
+        
+        .captcha-container {
+            margin: 20px 0;
+        }
+        
+        .captcha-text {
+            font-size: 1.5rem;
+            letter-spacing: 5px;
+            background: #252525;
+            padding: 10px;
+            display: inline-block;
+            margin-bottom: 15px;
+            color: #8B0000;
+            font-weight: bold;
+            user-select: none;
+        }
+        
+        .captcha-input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background: #252525;
+            border: 1px solid #8B0000;
+            color: white;
+            font-size: 1rem;
+            border-radius: 5px;
+        }
+        
+        .verify-btn {
+            background-color: #8B0000;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .verify-btn:hover {
+            background-color: #ff0000;
+        }
+        
+        /* Стили для Cookie-уведомления */
+        .cookie-consent {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 2px solid #8B0000;
+            z-index: 999;
+        }
+        
+        .cookie-text {
+            flex: 1;
+            margin-right: 20px;
+        }
+        
+        .cookie-btn {
+            background-color: #8B0000;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .cookie-btn:hover {
+            background-color: #ff0000;
+        }
+        
+        .features {
+            padding: 50px 20px;
+            text-align: center;
+        }
+        
+        .features h2 {
+            font-size: 2rem;
+            margin-bottom: 40px;
+            color: #8B0000;
+            text-shadow: 0 0 5px rgba(139, 0, 0, 0.3);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background-color: #1a1a1a;
+            padding: 25px;
+            border-radius: 10px;
+            border-bottom: 3px solid #8B0000;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(139, 0, 0, 0.3);
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #8B0000;
+        }
+        
+        footer {
+            background-color: #0a0a0a;
+            padding: 30px 20px;
+            text-align: center;
+            border-top: 2px solid #8B0000;
+            margin-bottom: 60px;
+        }
+        
+        .social-links {
+            margin-bottom: 20px;
+        }
+        
+        .social-links a {
+            color: #8B0000;
+            font-size: 1.5rem;
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: #ff0000;
+        }
+
+        /* Стили для кнопки "Наверх" */
+        .back-to-top {
+            position: fixed;
+            bottom: 80px;
+            right: 30px;
+            background-color: #8B0000;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+        }
+        
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            background-color: #ff0000;
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+        }
+        
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav a {
+                margin: 5px 0;
+            }
+
+            .modal-content {
+                margin: 30% auto;
+                width: 90%;
+            }
+            
+            .cookie-consent {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .cookie-text {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">SURVIVAL WORLD</div>
+        <div class="tagline">Выживай, строй, доминируй - в твоем кармане!</div>
+    </header>
+    
+    <nav>
+        <a href="#features">Особенности</a>
+        <a href="#download">Скачать</a>
+    </nav>
+    
+    <section class="hero">
+        <h1>Новая эра мобильного выживания</h1>
+        <p>Survival World предлагает захватывающий опыт выживания в открытом мире с элементами крафта, строительства и PvP. Сражайся за ресурсы, создавай убежища и докажи, что ты достоин выжить в этом жестоком мире!</p>
+        <button class="download-btn" id="downloadBtn">Скачать сейчас</button>
+    </section>
+    
+    <section class="features" id="features">
+        <h2>Ключевые особенности</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>Открытый мир</h3>
+                <p>Исследуйте огромные территории с разнообразными биомами, наполненными ресурсами и опасностями.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Глубокая система крафта</h3>
+                <p>Создавайте сотни предметов - от простых инструментов до мощного оружия и укрепленных баз.</p>
+            </div>
+            <div class="feature-card">
+                <h3>PvP и PvE</h3>
+                <p>Сражайтесь с другими игроками или объединяйтесь с ними против общих врагов и опасностей мира.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Строительство баз</h3>
+                <p>Создавайте и улучшайте свои убежища, защищайте их от рейдов и делайте неприступными.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Реалистичные системы</h3>
+                <p>Голод, жажда, температура - следите за показателями своего персонажа, чтобы выжить.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Регулярные обновления</h3>
+                <p>Новый контент, исправления и улучшения.</p>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="social-links">
+            <a href="#" id="tgLink">Telegram</a>
+        </div>
+        <p>© 2025 Superice Games. Все права украдены.</p>
+        <p>Это неофициальный мобильный аналог Rust.</p>
+    </footer>
+
+    <!-- Кнопка "Наверх" -->
+    <div class="back-to-top" id="backToTop">↑</div>
+
+    <!-- Cookie-уведомление -->
+    <div class="cookie-consent" id="cookieConsent">
+        <div class="cookie-text">
+            Мы используем cookies для улучшения работы сайта. Оставаясь на сайте, вы соглашаетесь с нашей политикой использования cookies.
+        </div>
+        <button class="cookie-btn" id="acceptCookies">Принять</button>
+    </div>
+
+    <!-- Модальное окно CAPTCHA -->
+    <div id="captchaModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Подтвердите, что вы не робот</h2>
+            <div class="captcha-container">
+                <p>Введите текст ниже:</p>
+                <div class="captcha-text" id="captchaText">ABC123</div>
+                <input type="text" class="captcha-input" id="captchaInput" placeholder="Введите текст">
+                <button class="verify-btn" id="verifyBtn">Подтвердить</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Генерация случайного CAPTCHA
+        function generateCaptcha() {
+            const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            let captcha = "";
+            for (let i = 0; i < 6; i++) {
+                captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return captcha;
+        }
+
+        // Проверка Cookie-согласия
+        function checkCookieConsent() {
+            try {
+                return localStorage.getItem('cookieConsent') === 'accepted';
+            } catch (e) {
+                console.error('Ошибка доступа к localStorage:', e);
+                return false;
+            }
+        }
+
+        // Установка Cookie-согласия
+        function setCookieConsent() {
+            try {
+                localStorage.setItem('cookieConsent', 'accepted');
+                document.getElementById('cookieConsent').style.display = 'none';
+                initTracking();
+            } catch (e) {
+                console.error('Ошибка при установке cookie согласия:', e);
+            }
+        }
+
+        // Инициализация трекинга пользователя
+        function initTracking() {
+            try {
+                // Уникальный идентификатор пользователя
+                let userId = localStorage.getItem('userId');
+                if (!userId) {
+                    userId = 'user_' + Math.random().toString(36).substr(2, 9);
+                    localStorage.setItem('userId', userId);
+                }
+                
+                // Запись времени первого посещения
+                if (!localStorage.getItem('firstVisit')) {
+                    const now = new Date();
+                    localStorage.setItem('firstVisit', now.toISOString());
+                    setCookie('firstVisit', now.toISOString(), 365);
+                }
+                
+                // Запись информации о браузере
+                if (!localStorage.getItem('userAgent')) {
+                    const userAgent = navigator.userAgent;
+                    localStorage.setItem('userAgent', userAgent);
+                    setCookie('userAgent', encodeURIComponent(userAgent), 365);
+                }
+                
+                // Запись разрешения экрана
+                if (!localStorage.getItem('screenResolution')) {
+                    const screenResolution = `${window.screen.width}x${window.screen.height}`;
+                    localStorage.setItem('screenResolution', screenResolution);
+                    setCookie('screenResolution', screenResolution, 365);
+                }
+                
+                // Запись языка браузера
+                if (!localStorage.getItem('language')) {
+                    const language = navigator.language;
+                    localStorage.setItem('language', language);
+                    setCookie('language', language, 365);
+                }
+                
+                // Запись источника перехода
+                if (!localStorage.getItem('referrer')) {
+                    const referrer = document.referrer || 'direct';
+                    localStorage.setItem('referrer', referrer);
+                    setCookie('referrer', encodeURIComponent(referrer), 365);
+                }
+                
+                console.log('Трекинг инициализирован для пользователя:', userId);
+            } catch (e) {
+                console.error('Ошибка инициализации трекинга:', e);
+            }
+        }
+
+        // Установка cookie с настройками
+        function setCookie(name, value, days) {
+            try {
+                let expires = "";
+                if (days) {
+                    const date = new Date();
+                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                    expires = "; expires=" + date.toUTCString();
+                }
+                document.cookie = name + "=" + (value || "") + expires + "; path=/";
+            } catch (e) {
+                console.error('Ошибка установки cookie:', e);
+            }
+        }
+
+        // Трекинг действий пользователя
+        function trackUserAction(action, details = {}) {
+            if (!checkCookieConsent()) return;
+            
+            try {
+                const userId = localStorage.getItem('userId') || 'unknown';
+                const timestamp = new Date().toISOString();
+                
+                // Сохраняем действие в localStorage
+                const actions = JSON.parse(localStorage.getItem('userActions') || []);
+                if (actions.length > 50) actions.shift(); // Ограничиваем историю
+                actions.push({
+                    userId,
+                    action,
+                    details,
+                    timestamp
+                });
+                localStorage.setItem('userActions', JSON.stringify(actions));
+                
+                // Также сохраняем в cookie (ограниченное количество)
+                setCookie(`action_${Date.now()}`, JSON.stringify({action, timestamp}), 7);
+                
+                console.log('Записано действие:', action, details);
+            } catch (e) {
+                console.error('Ошибка трекинга действия:', e);
+            }
+        }
+
+        // Отправка данных на сервер (имитация)
+        function sendTrackingDataToServer() {
+            if (!checkCookieConsent()) return;
+            
+            try {
+                const userId = localStorage.getItem('userId');
+                const userData = {
+                    userId,
+                    firstVisit: localStorage.getItem('firstVisit'),
+                    lastVisit: new Date().toISOString(),
+                    userAgent: localStorage.getItem('userAgent'),
+                    screenResolution: localStorage.getItem('screenResolution'),
+                    language: localStorage.getItem('language'),
+                    referrer: localStorage.getItem('referrer'),
+                    actions: JSON.parse(localStorage.getItem('userActions') || '[]'),
+                    pageUrl: window.location.href,
+                    pageTitle: document.title
+                };
+                
+                // Здесь должна быть реальная отправка данных на сервер
+                console.log('Отправка данных на сервер:', userData);
+                
+                // Имитация отправки с помощью fetch
+                // fetch('https://api.example.com/track', {
+                //     method: 'POST',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //     },
+                //     body: JSON.stringify(userData)
+                // });
+            } catch (e) {
+                console.error('Ошибка отправки данных:', e);
+            }
+        }
+
+        // Инициализация CAPTCHA
+        let currentCaptcha = generateCaptcha();
+        document.getElementById('captchaText').textContent = currentCaptcha;
+
+        // Получаем элементы
+        const modal = document.getElementById("captchaModal");
+        const downloadBtn = document.getElementById("downloadBtn");
+        const tgLink = document.getElementById("tgLink");
+        const span = document.getElementsByClassName("close")[0];
+        const verifyBtn = document.getElementById("verifyBtn");
+        const captchaInput = document.getElementById("captchaInput");
+        const cookieConsent = document.getElementById("cookieConsent");
+        const acceptCookies = document.getElementById("acceptCookies");
+
+        // Проверяем согласие на Cookie при загрузке
+        if (checkCookieConsent()) {
+            cookieConsent.style.display = 'none';
+            initTracking();
+        } else {
+            cookieConsent.style.display = 'flex';
+        }
+
+        // Обработчик для кнопки принятия Cookie
+        acceptCookies.addEventListener('click', function() {
+            setCookieConsent();
+            trackUserAction('cookie_consent_accepted');
+        });
+
+        // Обработчик для кнопки скачать
+        downloadBtn.addEventListener('click', function() {
+            if (checkCookieConsent()) {
+                modal.style.display = "block";
+                currentCaptcha = generateCaptcha();
+                document.getElementById('captchaText').textContent = currentCaptcha;
+                captchaInput.value = "";
+                trackUserAction('download_button_click');
+            } else {
+                alert("Пожалуйста, примите нашу политику использования cookies перед продолжением.");
+                trackUserAction('download_button_click_no_consent');
+            }
+        });
+
+        // Обработчик для ссылки Telegram
+        tgLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (checkCookieConsent()) {
+                modal.style.display = "block";
+                currentCaptcha = generateCaptcha();
+                document.getElementById('captchaText').textContent = currentCaptcha;
+                captchaInput.value = "";
+                trackUserAction('telegram_link_click');
+            } else {
+                alert("Пожалуйста, примите нашу политику использования cookies перед продолжением.");
+                trackUserAction('telegram_link_click_no_consent');
+            }
+        });
+
+        // Закрываем модальное окно при нажатии на крестик
+        span.addEventListener('click', function() {
+            modal.style.display = "none";
+            trackUserAction('captcha_modal_closed');
+        });
+
+        // Закрываем модальное окно при клике вне его
+        window.addEventListener('click', function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                trackUserAction('captcha_modal_closed_outside');
+            }
+        });
+
+        // Проверка CAPTCHA
+        verifyBtn.addEventListener('click', function() {
+            if (!captchaInput.value) {
+                alert("Пожалуйста, введите код CAPTCHA");
+                return;
+            }
+            
+            if (captchaInput.value.toUpperCase() === currentCaptcha) {
+                trackUserAction('captcha_success');
+                // Перенаправляем в Telegram после успешной проверки
+                window.location.href = "https://t.me/supericestudio";
+            } else {
+                trackUserAction('captcha_failed', {attempt: captchaInput.value});
+                alert("Неверный код! Попробуйте ещё раз.");
+                currentCaptcha = generateCaptcha();
+                document.getElementById('captchaText').textContent = currentCaptcha;
+                captchaInput.value = "";
+            }
+        });
+
+        // Трекинг навигации по сайту
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                trackUserAction('navigation_click', {
+                    linkText: this.innerText,
+                    href: this.getAttribute('href')
+                });
+            });
+        });
+
+        // Трекинг просмотра страницы
+        window.addEventListener('DOMContentLoaded', function() {
+            if (checkCookieConsent()) {
+                trackUserAction('page_view', {
+                    pageTitle: document.title,
+                    url: window.location.href
+                });
+                
+                // Обновляем время последнего посещения
+                localStorage.setItem('lastVisit', new Date().toISOString());
+                setCookie('lastVisit', new Date().toISOString(), 365);
+            }
+        });
+
+        // Трекинг скроллинга (с троттлингом)
+        let scrollTimeout;
+        let lastScrollTrackTime = 0;
+        window.addEventListener('scroll', function() {
+            if (!checkCookieConsent()) return;
+            
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                const now = Date.now();
+                if (now - lastScrollTrackTime > 1000) { // Ограничиваем частоту трекинга
+                    const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+                    const scrollPercentage = Math.round((scrollPosition / (document.body.scrollHeight - window.innerHeight)) * 100);
+                    
+                    trackUserAction('page_scroll', {
+                        scrollPosition,
+                        scrollPercentage
+                    });
+                    
+                    lastScrollTrackTime = now;
+                }
+            }, 200);
+        });
+
+        // Трекинг времени на странице
+        let pageStartTime = Date.now();
+        window.addEventListener('beforeunload', function() {
+            if (checkCookieConsent()) {
+                const timeSpent = Math.round((Date.now() - pageStartTime) / 1000); // в секундах
+                trackUserAction('time_spent_on_page', {
+                    seconds: timeSpent
+                });
+                
+                // Перед закрытием страницы отправляем данные на сервер
+                sendTrackingDataToServer();
+            }
+        });
+
+        // Показываем/скрываем кнопку при прокрутке
+        window.addEventListener('scroll', function() {
+            const backToTopButton = document.getElementById('backToTop');
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('show');
+            } else {
+                backToTopButton.classList.remove('show');
+            }
+        });
+
+        // Плавная прокрутка вверх при клике
+        document.getElementById('backToTop').addEventListener('click', function(e) {
+            e.preventDefault();
+            trackUserAction('back_to_top_click');
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Защита от XSS
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
