@@ -15,13 +15,16 @@
         body {
             background-color: #0d0d0d;
             color: #e0e0e0;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgcGF0dGVyblRyYW5zZm9ybT0icm90YXRlKDQ1KSI+PHJlY3QgaWQ9InBhdHRlcm4tZ3JpZCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0icmdiYSg5MCwgMCwgMCwgMC4wMykiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjcGF0dGVybikiLz48L3N2Zz4=');
         }
         
         header {
-            background-color: #0a0a0a;
+            background-color: rgba(10, 10, 10, 0.95);
             padding: 20px;
             text-align: center;
             border-bottom: 2px solid #8B0000;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(139, 0, 0, 0.4);
         }
         
         .logo {
@@ -29,19 +32,102 @@
             color: #8B0000;
             font-weight: bold;
             margin-bottom: 10px;
-            text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #8B0000, transparent);
+            animation: bloodDrip 3s infinite;
+        }
+        
+        @keyframes bloodDrip {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
         }
         
         .tagline {
             font-size: 1.2rem;
             color: #aaa;
+            margin-bottom: 15px;
+        }
+        
+        .dev-info {
+            background: rgba(139, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-flex;
+            align-items: center;
+            margin-top: 10px;
+            border: 1px solid rgba(139, 0, 0, 0.5);
+        }
+        
+        .dev-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid #8B0000;
+            background: linear-gradient(45deg, #000, #333);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .dev-avatar::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjM1IiByPSIyMCIgZmlsbD0iIzMzMyIvPjxwYXRoIGQ9Ik0zMCA4MEM3MCA4MCA3NSA1NSA1MCA1NVMyNSA4MCAzMCA4MCIgZmlsbD0iIzMzMyIvPjxsaW5lIHgxPSIzNSIgeTE9IjQwIiB4Mj0iNDUiIHkyPSI0MCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIiLz48bGluZSB4MT0iNTUiIHkxPSI0MCIgeDI9IjY1IiB5Mj0iNDAiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+') center/cover no-repeat;
+        }
+        
+        .dev-name {
+            font-weight: bold;
+            color: #8B0000;
+        }
+        
+        .dev-role {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        
+        .alpha-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #8B0000;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(139, 0, 0, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(139, 0, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(139, 0, 0, 0); }
         }
         
         nav {
             display: flex;
             justify-content: center;
-            background-color: #1a1a1a;
+            background-color: rgba(26, 26, 26, 0.95);
             padding: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #8B0000;
         }
         
         nav a {
@@ -50,16 +136,35 @@
             margin: 0 15px;
             font-weight: bold;
             font-size: 1.1rem;
-            transition: color 0.3s;
+            transition: all 0.3s;
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #ff0000;
+            transition: width 0.3s;
         }
         
         nav a:hover {
             color: #ff0000;
         }
         
+        nav a:hover::after {
+            width: 100%;
+        }
+        
         .hero {
-            height: 60vh;
-            background-image: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://via.placeholder.com/1920x1080/222/8B0000?text=Survival+World');
+            height: 70vh;
+            background-image: 
+                linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)),
+                url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgcGF0dGVyblRyYW5zZm9ybT0icm90YXRlKDQ1KSI+PHJlY3QgaWQ9InBhdHRlcm4tZ3JpZCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0icmdiYSg5MCwgMCwgMCwgMC4xKSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -68,23 +173,46 @@
             align-items: center;
             text-align: center;
             padding: 0 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJkcm9wIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB3aWR0aD0iNTAiIGhlaWdodD0iNTAiPjxwYXRoIGZpbGw9InJnYmEoMTM5LCAwLCAwLCAwLjA1KSIgZD0iTTAgMjVIMzBWNTBIMFYyNXoiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZHJvcCkiLz48L3N2Zz4=');
+            animation: bloodDrops 20s infinite linear;
+            pointer-events: none;
+        }
+        
+        @keyframes bloodDrops {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 50px; }
         }
         
         .hero h1 {
-            font-size: 2.5rem;
+            font-size: 3rem;
             margin-bottom: 20px;
             color: #8B0000;
-            text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+            text-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+            position: relative;
+            z-index: 1;
         }
         
         .hero p {
             font-size: 1.2rem;
             margin-bottom: 30px;
             max-width: 800px;
+            position: relative;
+            z-index: 1;
         }
         
         .download-btn {
-            background-color: #8B0000;
+            background: linear-gradient(145deg, #8B0000, #600);
             color: white;
             padding: 15px 30px;
             border: none;
@@ -92,13 +220,31 @@
             font-size: 1.2rem;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+            box-shadow: 0 5px 15px rgba(139, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
         }
         
         .download-btn:hover {
-            background-color: #ff0000;
+            background: linear-gradient(145deg, #a00, #700);
             transform: translateY(-3px);
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.6);
+        }
+        
+        .download-btn:hover::before {
+            left: 100%;
         }
         
         /* Стили для модального окна CAPTCHA */
@@ -110,7 +256,7 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.8);
+            background-color: rgba(0,0,0,0.9);
         }
         
         .modal-content {
@@ -123,6 +269,7 @@
             max-width: 500px;
             text-align: center;
             position: relative;
+            box-shadow: 0 0 30px rgba(139, 0, 0, 0.7);
         }
         
         .close {
@@ -134,6 +281,7 @@
             position: absolute;
             right: 15px;
             top: 5px;
+            transition: color 0.3s;
         }
         
         .close:hover {
@@ -154,6 +302,8 @@
             color: #8B0000;
             font-weight: bold;
             user-select: none;
+            border: 1px solid #8B0000;
+            border-radius: 5px;
         }
         
         .captcha-input {
@@ -165,10 +315,17 @@
             color: white;
             font-size: 1rem;
             border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .captcha-input:focus {
+            outline: none;
+            border-color: #ff0000;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
         }
         
         .verify-btn {
-            background-color: #8B0000;
+            background: linear-gradient(145deg, #8B0000, #600);
             color: white;
             padding: 10px 20px;
             border: none;
@@ -176,10 +333,12 @@
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(139, 0, 0, 0.5);
         }
         
         .verify-btn:hover {
-            background-color: #ff0000;
+            background: linear-gradient(145deg, #a00, #700);
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.6);
         }
         
         /* Стили для Cookie-уведомления */
@@ -196,6 +355,7 @@
             align-items: center;
             border-top: 2px solid #8B0000;
             z-index: 999;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.5);
         }
         
         .cookie-text {
@@ -204,7 +364,7 @@
         }
         
         .cookie-btn {
-            background-color: #8B0000;
+            background: linear-gradient(145deg, #8B0000, #600);
             color: white;
             padding: 8px 15px;
             border: none;
@@ -214,19 +374,45 @@
         }
         
         .cookie-btn:hover {
-            background-color: #ff0000;
+            background: linear-gradient(145deg, #a00, #700);
         }
         
         .features {
-            padding: 50px 20px;
+            padding: 80px 20px;
             text-align: center;
+            background: rgba(13, 13, 13, 0.9);
+            position: relative;
+        }
+        
+        .features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IGlkPSJwYXR0ZXJuLWdyaWQiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InJnYmEoOTAsIDAsIDAsIDAuMDUpIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3BhdHRlcm4pIi8+PC9zdmc+');
+            z-index: -1;
         }
         
         .features h2 {
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin-bottom: 40px;
             color: #8B0000;
-            text-shadow: 0 0 5px rgba(139, 0, 0, 0.3);
+            text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .features h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #8B0000, transparent);
         }
         
         .feature-grid {
@@ -238,16 +424,34 @@
         }
         
         .feature-card {
-            background-color: #1a1a1a;
-            padding: 25px;
+            background: rgba(26, 26, 26, 0.8);
+            padding: 30px;
             border-radius: 10px;
             border-bottom: 3px solid #8B0000;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(139, 0, 0, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
         }
         
         .feature-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(139, 0, 0, 0.3);
+            box-shadow: 0 10px 25px rgba(139, 0, 0, 0.3);
+        }
+        
+        .feature-card:hover::before {
+            transform: translateX(100%);
         }
         
         .feature-card h3 {
@@ -256,8 +460,95 @@
             color: #8B0000;
         }
         
+        .team-section {
+            padding: 80px 20px;
+            text-align: center;
+            background: rgba(10, 10, 10, 0.9);
+            border-top: 2px solid #8B0000;
+            border-bottom: 2px solid #8B0000;
+        }
+        
+        .team-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: #8B0000;
+            text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+        }
+        
+        .team-member {
+            background: rgba(26, 26, 26, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+            border: 1px solid #8B0000;
+            box-shadow: 0 5px 15px rgba(139, 0, 0, 0.3);
+        }
+        
+        .team-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            border: 3px solid #8B0000;
+            background: linear-gradient(45deg, #000, #333);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .team-avatar::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjM1IiByPSIyMCIgZmlsbD0iIzMzMyIvPjxwYXRoIGQ9Ik0zMCA4MEM3MCA4MCA3NSA1NSA1MCA1NVMyNSA4MCAzMCA4MCIgZmlsbD0iIzMzMyIvPjxsaW5lIHgxPSIzNSIgeTE9IjQwIiB4Mj0iNDUiIHkyPSI0MCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIiLz48bGluZSB4MT0iNTUiIHkxPSI0MCIgeDI9IjY1IiB5Mj0iNDAiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+PHJlY3QgeD0iMzUiIHk9IjY1IiB3aWR0aD0iMzAiIGhlaWdodD0iNSIgZmlsbD0iIzMzMyIvPjwvc3ZnPg==') center/cover no-repeat;
+        }
+        
+        .team-name {
+            font-size: 1.5rem;
+            color: #8B0000;
+            margin-bottom: 5px;
+        }
+        
+        .team-role {
+            font-size: 1.1rem;
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+        
+        .team-desc {
+            color: #aaa;
+            line-height: 1.6;
+        }
+        
+        .alpha-info {
+            padding: 40px 20px;
+            text-align: center;
+            background: rgba(139, 0, 0, 0.1);
+            border-top: 1px solid #8B0000;
+            border-bottom: 1px solid #8B0000;
+        }
+        
+        .alpha-info h3 {
+            font-size: 2rem;
+            color: #8B0000;
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px rgba(139, 0, 0, 0.3);
+        }
+        
+        .alpha-info p {
+            max-width: 800px;
+            margin: 0 auto 20px;
+            line-height: 1.6;
+        }
+        
+        .alpha-highlight {
+            color: #ff0000;
+            font-weight: bold;
+        }
+        
         footer {
-            background-color: #0a0a0a;
+            background-color: rgba(10, 10, 10, 0.95);
             padding: 30px 20px;
             text-align: center;
             border-top: 2px solid #8B0000;
@@ -272,11 +563,13 @@
             color: #8B0000;
             font-size: 1.5rem;
             margin: 0 10px;
-            transition: color 0.3s;
+            transition: all 0.3s;
+            display: inline-block;
         }
         
         .social-links a:hover {
             color: #ff0000;
+            transform: translateY(-3px);
         }
 
         /* Стили для кнопки "Наверх" */
@@ -284,7 +577,7 @@
             position: fixed;
             bottom: 80px;
             right: 30px;
-            background-color: #8B0000;
+            background: linear-gradient(145deg, #8B0000, #600);
             color: white;
             width: 50px;
             height: 50px;
@@ -298,7 +591,8 @@
             visibility: hidden;
             transition: all 0.3s ease;
             z-index: 1000;
-            box-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+            box-shadow: 0 5px 15px rgba(139, 0, 0, 0.5);
+            border: none;
         }
         
         .back-to-top.show {
@@ -307,9 +601,9 @@
         }
         
         .back-to-top:hover {
-            background-color: #ff0000;
+            background: linear-gradient(145deg, #a00, #700);
             transform: translateY(-3px);
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.6);
         }
         
         @media (max-width: 768px) {
@@ -344,23 +638,44 @@
                 margin-right: 0;
                 margin-bottom: 15px;
             }
+            
+            .dev-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .dev-avatar {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
         }
     </style>
 </head>
 <body>
     <header>
+        <div class="alpha-badge">ЗАКРЫТЫЙ АЛЬФА-ТЕСТ</div>
         <div class="logo">RustBorn</div>
         <div class="tagline">Выживай, строй, доминируй - в твоем кармане!</div>
+        
+        <div class="dev-info">
+            <div class="dev-avatar"></div>
+            <div>
+                <div class="dev-name">EgorikDev</div>
+                <div class="dev-role">Главный разработчик</div>
+            </div>
+        </div>
     </header>
     
     <nav>
         <a href="#features">Особенности</a>
+        <a href="#team">Разработчик</a>
+        <a href="#alpha">Альфа-тест</a>
     </nav>
     
     <section class="hero">
         <h1>Новая эра мобильного выживания</h1>
         <p>RustBorn предлагает захватывающий опыт выживания в открытом мире с элементами крафта, строительства и PvP. Сражайся за ресурсы, создавай убежища и докажи, что ты достоин выжить в этом жестоком мире!</p>
-        <button class="download-btn" id="downloadBtn">Скачать сейчас</button>
+        <button class="download-btn" id="downloadBtn">Получить доступ к альфа-тесту</button>
     </section>
     
     <section class="features" id="features">
@@ -387,18 +702,35 @@
                 <p>Голод, жажда, температура - следите за показателями своего персонажа, чтобы выжить.</p>
             </div>
             <div class="feature-card">
-                <h3>Будут Регулярные обновления</h3>
-                <p>Новый контент, исправления и улучшения.</p>
+                <h3>Регулярные обновления</h3>
+                <p>Постоянно добавляется новый контент, исправления и улучшения в каждом обновлении.</p>
             </div>
         </div>
+    </section>
+    
+    <section class="team-section" id="team">
+        <h2>Главный разработчик</h2>
+        <div class="team-member">
+            <div class="team-avatar"></div>
+            <h3 class="team-name">EgorikDev</h3>
+            <div class="team-role">Создатель RustBorn</div>
+            <p class="team-desc">Основатель и главный разработчик Superice Games. Создаю игры используя многогранный технический стек: C# для Unity, Unreal Engine для высококачественных проектов, Python для инструментария и Lua для скриптинга. Руковожу всеми этапами разработки - от концепции до релиза.</p>
+        </div>
+    </section>
+    
+    <section class="alpha-info" id="alpha">
+        <h3>Закрытый альфа-тест</h3>
+        <p>Сейчас RustBorn находится на стадии закрытого альфа-тестирования. Это означает, что игра еще в активной разработке, но уже доступна для ограниченного круга тестировщиков.</p>
+        <p>Участие в альфа-тесте дает возможность первым опробовать все функции игры, повлиять на ее развитие и помочь выявить баги и проблемы баланса.</p>
+        <p class="alpha-highlight">Чтобы получить доступ к альфа-тесту, нажмите кнопку выше и пройдите проверку!</p>
     </section>
     
     <footer>
         <div class="social-links">
             <a href="#" id="tgLink">Telegram</a>
         </div>
-        <p>© 2025 Superice Games. Все права украдены.</p>
-        <p>Это неофициальный мобильный аналог Rust.</p>
+        <p>© 2025 Superice Games. Все права защищены.</p>
+        <p>RustBorn - неофициальный мобильный проект, вдохновленный Rust.</p>
     </footer>
 
     <!-- Кнопка "Наверх" -->
@@ -668,7 +1000,7 @@
             if (captchaInput.value.toUpperCase() === currentCaptcha) {
                 trackUserAction('captcha_success');
                 // Перенаправляем в Telegram после успешной проверки
-                window.location.href = "https://t.me/supericestudio";
+                window.location.href = "https://t.me/rustborngame";
             } else {
                 trackUserAction('captcha_failed', {attempt: captchaInput.value});
                 alert("Неверный код! Попробуйте ещё раз.");
@@ -770,5 +1102,4 @@
         }
     </script>
 </body>
-
 </html>
